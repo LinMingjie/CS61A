@@ -1,0 +1,13 @@
+# My configurations:
+.idea/
+lecture/
+
+# ok:
+ok
+*.ok
+.ok_history
+
+# Python:
+__pycache__/
+*.py[cod]
+*$py.class
