@@ -6,7 +6,13 @@ def multiple(a, b):
     >>> multiple(14, 21)
     42
     """
-    "*** YOUR CODE HERE ***"
+    t_a, t_b = a, b
+    while b != 0:
+        r = b
+        b = a % b
+        a = r
+    return t_a * t_b // a
+
 
 def unique_digits(n):
     """Return the number of unique digits in positive integer n
@@ -24,4 +30,11 @@ def unique_digits(n):
     >>> unique_digits(10) # 0 and 1
     2
     """
-    "*** YOUR CODE HERE ***"
+    is_unique = [True] * 10
+    count = 0
+    while n > 0:
+        if is_unique[n % 10]:
+            count += 1
+            is_unique[n % 10] = False
+        n //= 10
+    return count
