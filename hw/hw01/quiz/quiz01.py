@@ -7,10 +7,12 @@ def multiple(a, b):
     42
     """
     t_a, t_b = a, b
+    # gcd
     while b != 0:
         r = b
         b = a % b
         a = r
+    # lcm
     return t_a * t_b // a
 
 

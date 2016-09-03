@@ -29,6 +29,8 @@ def two_of_three(a, b, c):
     >>> two_of_three(5, 5, 5)
     50
     """
+    # return max(a*a+b*b, a*a+c*c, b*b+c*c)
+    # return a**2 + b**2 + c**2 - min(a, b, c)**2
     return sum([pow(a, 2), pow(b, 2), pow(c, 2)]) - pow(min(a, b, c), 2)
 
 
