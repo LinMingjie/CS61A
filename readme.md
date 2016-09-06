@@ -1,1 +1,1 @@
-Homework and labs of [CS 61A](http://cs61a.org/) - Fall 2016
+Homework, labs and projects of [CS 61A](http://cs61a.org/) - Fall 2016
