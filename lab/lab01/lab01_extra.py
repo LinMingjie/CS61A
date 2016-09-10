@@ -2,6 +2,7 @@
 
 # If Statements
 
+
 def xk(c, d):
     if c == 4:
         return 6
@@ -9,6 +10,7 @@ def xk(c, d):
         return 6 + 7 + c
     else:
         return 25
+
 
 def how_big(x):
     if x > 10:
@@ -20,6 +22,7 @@ def how_big(x):
     else:
         print("nothin'")
 
+
 def so_big(x):
     if x > 10:
         print('huge')
@@ -29,12 +32,14 @@ def so_big(x):
         print('small')
     print("nothin'")
 
+
 def ab(c, d):
     if c > 5:
         print(c)
     elif c > 7:
         print(d)
     print('foo')
+
 
 def bake(cake, make):
     if cake == 0:
@@ -48,6 +53,7 @@ def bake(cake, make):
 
 # Boolean Operators
 
+
 def both_positive(x, y):
     """Returns True if both x and y are positive.
 
@@ -56,9 +62,10 @@ def both_positive(x, y):
     >>> both_positive(1, 1)
     True
     """
-    return x and y > 0 # You can replace this line!
+    return x > 0 and y > 0 # You can replace this line!
 
 # While Loops
+
 
 def falling(n, k):
     """Compute the falling factorial of n to depth k.
@@ -72,7 +79,11 @@ def falling(n, k):
     >>> falling(4, 1)  # 4
     4
     """
-    "*** YOUR CODE HERE ***"
+    total, stop = 1, n - k
+    while n > stop:
+        total *= n
+        n -= 1
+    return total
 
 # Guessing Game
 
@@ -80,6 +91,7 @@ from random import randint
 
 LOWER = 1
 UPPER = 10
+
 
 def guess_random():
     """Guess randomly and return the number of guesses."""
@@ -91,13 +103,17 @@ def guess_random():
         num_guesses = num_guesses + 1
     return num_guesses
 
+
 def guess_linear():
     """Guess in increasing order and return the number of guesses."""
     prompt_for_number(LOWER, UPPER)
     num_guesses = 1
     guess = LOWER
-    "*** YOUR CODE HERE ***"
+    while not is_correct(guess):
+        guess += 1
+        num_guesses += 1
     return num_guesses
+
 
 def guess_binary():
     """Return the number of attempted guesses. Implement a faster search
@@ -111,8 +127,15 @@ def guess_binary():
     num_guesses = 1
     lower, upper = LOWER, UPPER
     guess = (lower + upper) // 2
-    "*** YOUR CODE HERE ***"
+    while not is_correct(guess):
+        if is_too_high(guess):
+            upper = guess - 1
+        else:
+            lower = guess + 1
+        guess = (lower + upper) // 2
+        num_guesses += 1
     return num_guesses
+
 
 # Receive user input. You do not need to understand the code below this line.
 
@@ -126,13 +149,16 @@ def prompt_for_number(lower, upper):
         if lower <= number <= upper:
             is_valid_number = True
 
+
 def is_correct(guess):
     """Ask the user if a guess is correct and return whether they respond y."""
     return is_yes('Is {0} your number? [y/n] '.format(guess))
 
+
 def is_too_high(guess):
     """Ask the user if a guess is too high and return whether they say yes."""
     return is_yes('Is {0} too high? [y/n] '.format(guess))
+
 
 def is_yes(prompt):
     """Ask the user a yes or no question and return whether they say yes."""

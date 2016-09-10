@@ -14,20 +14,16 @@ test = {
           ...     else:
           ...         return 25
           >>> xk(10, 10)
-          07fa61723879693a70211246239795ee
-          # locked
+          23
           >>> xk(10, 6)
-          07fa61723879693a70211246239795ee
-          # locked
+          23
           >>> xk(4, 6)
-          3dcab9fe3b2b966fc0dea4bee36cfbe4
-          # locked
+          6
           >>> xk(0, 0)
-          dc549763a66595fb8475050be281005d
-          # locked
+          25
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -41,20 +37,16 @@ test = {
           ...     else:
           ...         print("nothin'")
           >>> how_big(7)
-          fe4028bb37030ad778842d40ac93e700
-          # locked
+          'big'
           >>> how_big(12)
-          260c9a22fd4f3d2d25e08b6a0cd9d10e
-          # locked
+          huge
           >>> how_big(1)
-          fdb47b226224360303fcfb56870d356a
-          # locked
+          small
           >>> how_big(-1)
-          760faed592aa321d30da37c71aa1c67b
-          # locked
+          nothin'
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -67,19 +59,16 @@ test = {
           ...         print('small')
           ...     print("nothin'")
           >>> so_big(7)
-          fe4028bb37030ad778842d40ac93e700
-          # locked
+          'big'
           >>> so_big(12)
-          260c9a22fd4f3d2d25e08b6a0cd9d10e
-          fe4028bb37030ad778842d40ac93e700
-          # locked
+          huge
+          'big'
           >>> so_big(1)
-          fdb47b226224360303fcfb56870d356a
-          760faed592aa321d30da37c71aa1c67b
-          # locked
+          small
+          nothin'
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': False,
@@ -96,12 +85,11 @@ test = {
           ...         print(d)
           ...     print('foo')
           >>> ab(10, 20)
-          32606b4d8bc69544a1579aca287813dc
-          076de7ac11ca62f75f649af9dbe4149a
-          # locked
+          10
+          foo
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -115,17 +103,15 @@ test = {
           ...        return cake
           ...    return make
           >>> bake(0, 29)
-          f26f9ec9ba426ebfdd8a43b22c8c74a0
-          886cfa066159edb2578269b4d55d2239
-          886cfa066159edb2578269b4d55d2239
-          # locked
+          1
+          29
+          29
           >>> bake(1, "mashed potatoes")
-          18079ca0c56c783746b70728120f3747
-          8f01a74c39bca4e28ecd8bc5120a7c1d
-          # locked
+          mashed potatoes
+          "mashed potatoes"
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': False,
