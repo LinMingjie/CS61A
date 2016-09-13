@@ -4,7 +4,7 @@ lecture/
 
 # ok:
 ok
-*.ok
+*.ok*
 .ok_history
 
 # Python:
