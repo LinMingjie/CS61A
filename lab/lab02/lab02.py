@@ -1,5 +1,6 @@
 """Lab 2: Higher Order Functions & Lambdas & Recursions"""
 
+
 # Lambda Functions
 
 def lambda_curry2(func):
@@ -12,7 +13,8 @@ def lambda_curry2(func):
     8
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return lambda arg1: lambda arg2: func(arg1, arg2)
+
 
 # Higher Order Functions
 
@@ -33,6 +35,7 @@ def compose1(f, g):
     """
     return lambda x: f(g(x))
 
+
 def composite_identity(f, g):
     """
     Return a function with one parameter x that returns True if f(g(x)) is
@@ -47,4 +50,4 @@ def composite_identity(f, g):
     >>> b1(4)                            # (4 + 1)^2 != 4^2 + 1
     False
     """
-    "*** YOUR CODE HERE ***"
+    return lambda x: f(g(x)) == g(f(x))
