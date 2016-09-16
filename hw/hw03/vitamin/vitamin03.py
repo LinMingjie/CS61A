@@ -1,5 +1,6 @@
 HW_SOURCE_FILE = 'vitamin03.py'
 
+
 def has_seven(k):
     """Returns True if at least one of the digits of k is a 7, False otherwise.
 
@@ -16,7 +17,13 @@ def has_seven(k):
     >>> has_seven(7777)
     True
     """
-    "*** YOUR CODE HERE ***"
+    if k % 10 == 7:
+        return True
+    elif k == 0:
+        return False
+    else:
+        return has_seven(k // 10)
+
 
 def summation(n, term):
 
@@ -36,4 +43,7 @@ def summation(n, term):
     True
     """
     assert n >= 1
-    "*** YOUR CODE HERE ***"
+    if n == 1:
+        return term(1)
+    else:
+        return term(n) + summation(n - 1, term)

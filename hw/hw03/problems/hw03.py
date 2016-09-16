@@ -4,19 +4,24 @@ HW_SOURCE_FILE = 'hw03.py'
 # Questions #
 #############
 
+
 def square(x):
     return x * x
+
 
 def triple(x):
     return 3 * x
 
+
 def identity(x):
     return x
+
 
 def increment(x):
     return x + 1
 
 from operator import add, mul
+
 
 def accumulate(combiner, base, n, term):
     """Return the result of combining the first n terms in a sequence and base.
@@ -34,7 +39,11 @@ def accumulate(combiner, base, n, term):
     >>> accumulate(mul, 2, 3, square)   # 2 * 1^2 * 2^2 * 3^2
     72
     """
-    "*** YOUR CODE HERE ***"
+    total = base
+    for i in range(1, n + 1):
+        total = combiner(total, term(i))
+    return total
+
 
 def summation_using_accumulate(n, term):
     """Returns the sum of term(1) + ... + term(n). The implementation
@@ -49,8 +58,8 @@ def summation_using_accumulate(n, term):
     ...       ['Recursion', 'For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
-    return _______
+    return accumulate(add, 0, n, term)
+
 
 def product_using_accumulate(n, term):
     """An implementation of product using accumulate.
@@ -65,7 +74,8 @@ def product_using_accumulate(n, term):
     True
     """
     "*** YOUR CODE HERE ***"
-    return _______
+    return accumulate(mul, 1, n, term)
+
 
 def filtered_accumulate(combiner, base, pred, n, term):
     """Return the result of combining the terms in a sequence of N terms
@@ -91,14 +101,20 @@ def filtered_accumulate(combiner, base, pred, n, term):
     True
     """
     def combine_if(x, y):
-        "*** YOUR CODE HERE ***"
+        if pred(y):
+            return combiner(x, y)
+        else:
+            return x
     return accumulate(combine_if, base, n, term)
+
 
 def odd(x):
     return x % 2 == 1
 
+
 def greater_than_5(x):
     return x > 5
+
 
 def repeated(f, n):
     """Return the function that computes the nth application of f.
@@ -115,7 +131,15 @@ def repeated(f, n):
     >>> repeated(square, 0)(5)
     5
     """
-    "*** YOUR CODE HERE ***"
+    """
+    def fun(x):
+        for _ in range(n):
+            x = f(x)
+        return x
+    return fun
+    """
+    return lambda x: accumulate(lambda a, b: f(a), x, n, identity)
+
 
 def compose1(f, g):
     """Return a function h, such that h(x) = f(g(x))."""
@@ -128,24 +152,29 @@ def compose1(f, g):
 ###################
 
 challenge_question_program = """
-"*** YOUR CODE HERE ***"
+s='s=%r;print(s%%s)';print(s%s)
 """
+
 
 def zero(f):
     return lambda x: x
 
+
 def successor(n):
     return lambda f: lambda x: f(n(f)(x))
 
+
 def one(f):
     """Church numeral 1: same as successor(zero)"""
-    "*** YOUR CODE HERE ***"
+    return lambda x: f(zero(f)(x))
+
 
 def two(f):
     """Church numeral 2: same as successor(successor(zero))"""
-    "*** YOUR CODE HERE ***"
+    return lambda x: f(one(f)(x))
 
 three = successor(two)
+
 
 def church_to_int(n):
     """Convert the Church numeral n to a Python integer.
@@ -159,7 +188,8 @@ def church_to_int(n):
     >>> church_to_int(three)
     3
     """
-    "*** YOUR CODE HERE ***"
+    return n(lambda a: a + 1)(0)
+
 
 def add_church(m, n):
     """Return the Church numeral for m + n, for Church numerals m and n.
@@ -167,7 +197,8 @@ def add_church(m, n):
     >>> church_to_int(add_church(two, three))
     5
     """
-    "*** YOUR CODE HERE ***"
+    return lambda f: lambda x: m(f)(x) + n(f)(x)
+
 
 def mul_church(m, n):
     """Return the Church numeral for m * n, for Church numerals m and n.
@@ -178,7 +209,8 @@ def mul_church(m, n):
     >>> church_to_int(mul_church(three, four))
     12
     """
-    "*** YOUR CODE HERE ***"
+    return lambda f: lambda x: m(f)(x) * n(f)(x)
+
 
 def pow_church(m, n):
     """Return the Church numeral m ** n, for Church numerals m and n.
@@ -188,4 +220,4 @@ def pow_church(m, n):
     >>> church_to_int(pow_church(three, two))
     9
     """
-    "*** YOUR CODE HERE ***"
+    return n(m)
