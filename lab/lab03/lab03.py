@@ -11,7 +11,13 @@ def gcd(a, b):
     >>> gcd(40, 40)
     40
     """
-    "*** YOUR CODE HERE ***"
+    if a < b:
+        a, b = b, a
+    if a % b == 0:
+        return b
+    else:
+        return gcd(b, a % b)
+
 
 def hailstone(n):
     """Print out the hailstone sequence starting at n, and return the
@@ -28,4 +34,10 @@ def hailstone(n):
     >>> a
     7
     """
-    "*** YOUR CODE HERE ***"
+    print(n)
+    if n == 1:
+        return 1
+    if n % 2 == 0:
+        return 1 + hailstone(n // 2)
+    else:
+        return 1 + hailstone(n * 3 + 1)

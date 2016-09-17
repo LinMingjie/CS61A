@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': 'a4b8078cffcb4318519c4bb01f983419',
+          'answer': 'The base case is flawed: it misses the case where n == 1',
           'choices': [
             'The base case is flawed: it misses the case where n == 1',
             'The recursive case should be skip_mul(n - 1)',
@@ -13,7 +13,7 @@ test = {
             'None of the above'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           Consider a function that returns the product of every other
           number from 1 to n:

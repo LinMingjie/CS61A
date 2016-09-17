@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': '110c41012168b28dee9e181a50429e77',
+          'answer': 'The recursive call is not combined correctly into the final solution',
           'choices': [
             'The return statement in the recursive case is missing',
             'The base case is flawed: it should be n <= 0',
@@ -13,7 +13,7 @@ test = {
             'The variable n does not change, causing a infinite loop'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           Consider this implementation of the factorial function:
           def factorial(n):

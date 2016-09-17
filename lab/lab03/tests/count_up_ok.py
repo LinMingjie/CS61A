@@ -5,7 +5,7 @@ test = {
     {
       'cases': [
         {
-          'answer': 'b6f755c4109b49664bcaddf51484afd3',
+          'answer': 'The variable i resets back to 1 for each function call, printing 1 all the time',
           'choices': [
             'Should use return i instead of print(i)',
             'The variable i resets back to 1 for each function call, printing 1 all the time',
@@ -13,7 +13,7 @@ test = {
             'The recursive call should be count_up(n+1)'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           Consider another function that prints from 1 to n:
           >>> count_up(5)
@@ -36,7 +36,7 @@ test = {
           """
         },
         {
-          'answer': '06c25fe94fff25730097d5237ddbbc73',
+          'answer': 'The variable n does not change, causing a infinite loop',
           'choices': [
             'The variable n does not change, causing a infinite loop',
             'The return statement in the recursive case is missing',
@@ -44,7 +44,7 @@ test = {
             'Should use return i instead of print(i)'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           Consider a count up function that prints from 1 to n:
           >>> count_up(5)
