@@ -139,6 +139,8 @@ def repeated(f, n):
     return fun
     """
     return lambda x: accumulate(lambda a, b: f(a), x, n, identity)
+    # This solution could not pass 'repeated(square, 0)(5)'
+    # return accumulate(compose1, f, n - 1, lambda k: f)
 
 
 def compose1(f, g):
@@ -166,12 +168,12 @@ def successor(n):
 
 def one(f):
     """Church numeral 1: same as successor(zero)"""
-    return lambda x: f(zero(f)(x))
+    return lambda x: f(x)
 
 
 def two(f):
     """Church numeral 2: same as successor(successor(zero))"""
-    return lambda x: f(one(f)(x))
+    return lambda x: f(f(x))
 
 three = successor(two)
 
@@ -188,7 +190,7 @@ def church_to_int(n):
     >>> church_to_int(three)
     3
     """
-    return n(lambda a: a + 1)(0)
+    return n(lambda x: x + 1)(0)
 
 
 def add_church(m, n):
@@ -197,7 +199,7 @@ def add_church(m, n):
     >>> church_to_int(add_church(two, three))
     5
     """
-    return lambda f: lambda x: m(f)(x) + n(f)(x)
+    return lambda f: lambda x: m(f)(n(f)(x))
 
 
 def mul_church(m, n):
@@ -209,7 +211,7 @@ def mul_church(m, n):
     >>> church_to_int(mul_church(three, four))
     12
     """
-    return lambda f: lambda x: m(f)(x) * n(f)(x)
+    return lambda f: m(n(f))
 
 
 def pow_church(m, n):
