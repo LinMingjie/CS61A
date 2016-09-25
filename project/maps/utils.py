@@ -6,6 +6,7 @@ from random import sample
 # Rename the built-in zip (http://docs.python.org/3/library/functions.html#zip)
 _zip = zip
 
+
 def map_and_filter(s, map_fn, filter_fn):
     """Returns a new list containing the results of calling map_fn on each
     element of sequence s for which filter_fn returns a true value.
@@ -16,9 +17,9 @@ def map_and_filter(s, map_fn, filter_fn):
     [1, 9, 25]
     """
     # BEGIN Question 0
-    "*** REPLACE THIS LINE ***"
-    return ['REPLACE THIS WITH YOUR LIST COMPREHENSION']
+    return [map_fn(x) for x in s if filter_fn(x)]
     # END Question 0
+
 
 def key_of_min_value(d):
     """Returns the key in a dict d that corresponds to the minimum value of d.
@@ -30,9 +31,9 @@ def key_of_min_value(d):
     'c'
     """
     # BEGIN Question 0
-    "*** REPLACE THIS LINE ***"
-    return min('REPLACE THIS WITH YOUR SOLUTION')
+    return min(d, key=d.get)
     # END Question 0
+
 
 def zip(*sequences):
     """Returns a list of lists, where the i-th list contains the i-th
@@ -53,6 +54,7 @@ def zip(*sequences):
     """
     return list(map(list, _zip(*sequences)))
 
+
 def enumerate(s, start=0):
     """Returns a list of lists, where the i-th list contains i+start and
     the i-th element of s.
@@ -63,8 +65,9 @@ def enumerate(s, start=0):
     [[5, 'f'], [6, 'i'], [7, 'v'], [8, 'e']]
     """
     # BEGIN Question 0
-    "*** REPLACE THIS LINE ***"
+    return [[x + start, s[x]] for x in range(0, len(s))]
     # END Question 0
+
 
 def distance(pos1, pos2):
     """Returns the Euclidean distance between pos1 and pos2, which are pairs.
