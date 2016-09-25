@@ -12,7 +12,9 @@ def if_this_not_that(i_list, this):
     4
     5
     """
-    "*** YOUR CODE HERE ***"
+    for i in i_list:
+        print(i if i > this else 'that')
+
 
 # Q4
 def make_city(name, lat, lon):
@@ -27,6 +29,7 @@ def make_city(name, lat, lon):
     """
     return [name, lat, lon]
 
+
 def get_name(city):
     """
     >>> city = make_city('Berkeley', 0, 1)
@@ -34,6 +37,7 @@ def get_name(city):
     'Berkeley'
     """
     return city[0]
+
 
 def get_lat(city):
     """
@@ -43,6 +47,7 @@ def get_lat(city):
     """
     return city[1]
 
+
 def get_lon(city):
     """
     >>> city = make_city('Berkeley', 0, 1)
@@ -51,7 +56,10 @@ def get_lon(city):
     """
     return city[2]
 
+
 from math import sqrt
+
+
 def distance(city1, city2):
     """
     >>> city1 = make_city('city1', 0, 1)
@@ -63,7 +71,8 @@ def distance(city1, city2):
     >>> distance(city3, city4)
     5.0
     """
-    "*** YOUR CODE HERE ***"
+    return sqrt((get_lat(city1) - get_lat(city2))**2 + (get_lon(city1) - get_lon(city2))**2)
+
 
 # Q5
 def closer_city(lat, lon, city1, city2):
@@ -80,12 +89,14 @@ def closer_city(lat, lon, city1, city2):
     >>> closer_city(41.29, 174.78, bucharest, vienna)
     'Bucharest'
     """
-    "*** YOUR CODE HERE ***"
+    city0 = make_city('', lat, lon)
+    return get_name(city1) if distance(city0, city1) < distance(city0, city2) else get_name(city2)
 
 # Connect N: Q6-11
 ######################
 ### Connect N Game ###
 ######################
+
 
 def create_row(size):
     """Returns a single, empty row with the given size. Each empty spot is
@@ -94,8 +105,7 @@ def create_row(size):
     >>> create_row(5)
     ['-', '-', '-', '-', '-']
     """
-    "*** YOUR CODE HERE ***"
-    return _______
+    return ['-' for _ in range(size)]
 
 
 def create_board(rows, columns):
@@ -104,8 +114,7 @@ def create_board(rows, columns):
     >>> create_board(3, 5)
     [['-', '-', '-', '-', '-'], ['-', '-', '-', '-', '-'], ['-', '-', '-', '-', '-']]
     """
-    "*** YOUR CODE HERE ***"
-    return _______
+    return [create_row(columns) for _ in range(rows)]
 
 
 def replace_elem(lst, index, elem):
@@ -119,9 +128,8 @@ def replace_elem(lst, index, elem):
     >>> new is old   # check that replace_elem outputs a new list
     False
     """
-    assert index >= 0 and index < len(lst), 'Index is out of bounds'
-    "*** YOUR CODE HERE ***"
-    return _______
+    assert 0 <= index < len(lst), 'Index is out of bounds'
+    return lst[:index] + [elem] + lst[index + 1:]
 
 
 def get_piece(board, row, column):
@@ -136,8 +144,7 @@ def get_piece(board, row, column):
     >>> get_piece(board, 1, 1)
     '-'
     """
-    "*** YOUR CODE HERE ***"
-    return _______
+    return board[row][column]
 
 
 def put_piece(board, max_rows, column, player):
@@ -160,7 +167,10 @@ def put_piece(board, max_rows, column, player):
     >>> row
     -1
     """
-    "*** YOUR CODE HERE ***"
+    for r in range(max_rows - 1, -1, -1):
+        if get_piece(board, r, column) == '-':
+            return r, replace_elem(board, r, replace_elem(board[r], column, player))
+    return -1, board
 
 
 def make_move(board, max_rows, max_cols, col, player):
@@ -188,7 +198,10 @@ def make_move(board, max_rows, max_cols, col, player):
     >>> row
     -1
     """
-    "*** YOUR CODE HERE ***"
+    if col < 0 or col >= max_cols:
+        return -1, board
+    return put_piece(board, max_rows, col, player)
+
 
 def print_board(board, max_rows, max_cols):
     """Prints the board. Row 0 is at the top, and column 0 at the far left.
@@ -203,7 +216,9 @@ def print_board(board, max_rows, max_cols):
     - -
     X -
     """
-    "*** YOUR CODE HERE ***"
+    for row in range(max_rows):
+        print(' '.join([get_piece(board, row, col) for col in range(max_cols)]))
+
 
 def check_win_row(board, max_rows, max_cols, num_connect, row, player):
     """ Returns True if the given player has a horizontal win
@@ -227,7 +242,16 @@ def check_win_row(board, max_rows, max_cols, num_connect, row, player):
     >>> check_win_row(board, rows, columns, num_connect, 3, 'O')   # We only detect wins for the given player
     False
     """
-    "*** YOUR CODE HERE ***"
+    adjacent = 0
+    for col in range(max_cols):
+        if get_piece(board, row, col) != player:
+            adjacent = 0
+        else:
+            adjacent += 1
+            if adjacent >= num_connect:
+                return True
+    return False
+
 
 def check_win_column(board, max_rows, max_cols, num_connect, col, player):
     """ Returns True if the given player has a vertical win in the given column,
@@ -252,7 +276,16 @@ def check_win_column(board, max_rows, max_cols, num_connect, col, player):
     >>> check_win_column(board, rows, columns, num_connect, 1, 'X')
     False
     """
-    "*** YOUR CODE HERE ***"
+    adjacent = 0
+    for row in range(max_rows):
+        if get_piece(board, row, col) != player:
+            adjacent = 0
+        else:
+            adjacent += 1
+            if adjacent >= num_connect:
+                return True
+    return False
+
 
 def check_win(board, max_rows, max_cols, num_connect, row, col, player):
     """Returns True if the given player has any kind of win after placing a
@@ -288,8 +321,9 @@ def check_win(board, max_rows, max_cols, num_connect, row, col, player):
     """
     diagonal_win = check_win_diagonal(board, max_rows, max_cols, num_connect,
                                       row, col, player)
-    "*** YOUR CODE HERE ***"
-    return _______
+    return check_win_row(board, max_rows, max_cols, num_connect, row, player) or \
+        check_win_column(board, max_rows, max_cols, num_connect, row, player) or diagonal_win
+
 
 ###############################################################
 ### Functions for reference when solving the other problems ###
