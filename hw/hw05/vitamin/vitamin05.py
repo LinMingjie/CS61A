@@ -3,11 +3,14 @@ def tree(root, branches=[]):
         assert is_tree(branch), 'branches must be trees'
     return [root] + list(branches)
 
+
 def root(tree):
     return tree[0]
 
+
 def branches(tree):
     return tree[1:]
+
 
 def is_tree(tree):
     if type(tree) != list or len(tree) < 1:
@@ -17,8 +20,10 @@ def is_tree(tree):
             return False
     return True
 
+
 def is_leaf(tree):
     return not branches(tree)
+
 
 def print_tree(t, indent=0):
     """Print a representation of this tree in which each node is
@@ -43,6 +48,7 @@ def print_tree(t, indent=0):
     for b in branches(t):
         print_tree(b, indent + 1)
 
+
 def copy_tree(t):
     """Returns a copy of t. Only for testing purposes.
 
@@ -53,6 +59,7 @@ def copy_tree(t):
     5
     """
     return tree(root(t), [copy_tree(b) for b in branches(t)])
+
 
 def replace_leaf(t, old, new):
     """Returns a new tree where every leaf value equal to old has
@@ -83,7 +90,14 @@ def replace_leaf(t, old, new):
     >>> laerad == yggdrasil # Make sure original tree is unmodified
     True
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        if root(t) == old:
+            return tree(new)
+        else:
+            return tree(root(t))
+    else:
+        return tree(root(t), [replace_leaf(b, old, new) for b in branches(t)])
+
 
 def swap(a, b):
     """Swap the contents of lists a and b.
@@ -96,4 +110,4 @@ def swap(a, b):
     >>> b
     [1, 'two', 3]
     """
-    "*** YOUR CODE HERE ***"
+    a[:], b[:] = b[:], a[:]
