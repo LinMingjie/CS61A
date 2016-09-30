@@ -1,5 +1,6 @@
 ## Lab 6: Trees and Mutable Sequences ##
 
+
 # Sequences
 def map(fn, seq):
     """Applies fn onto each element in seq and returns a list.
@@ -7,7 +8,8 @@ def map(fn, seq):
     >>> map(lambda x: x*x, [1, 2, 3])
     [1, 4, 9]
     """
-    "*** YOUR CODE HERE ***"
+    return [fn(x) for x in seq]
+
 
 def filter(pred, seq):
     """Keeps elements in seq only if they satisfy pred.
@@ -15,7 +17,8 @@ def filter(pred, seq):
     >>> filter(lambda x: x % 2 == 0, [1, 2, 3, 4])
     [2, 4]
     """
-    "*** YOUR CODE HERE ***"
+    return [x for x in seq if pred(x)]
+
 
 def reduce(combiner, seq):
     """Combines elements in seq using combiner.
@@ -27,7 +30,11 @@ def reduce(combiner, seq):
     >>> reduce(lambda x, y: x * y, [4])
     4
     """
-    "*** YOUR CODE HERE ***"
+    ret = seq[0]
+    for i in range(1, len(seq)):
+        ret = combiner(ret, seq[i])
+    return ret
+
 
 # pyTunes
 def make_pytunes(username):
@@ -46,7 +53,16 @@ def make_pytunes(username):
         darude
           sandstorm
     """
-    "*** YOUR CODE HERE ***"
+    return tree(username,
+                [tree('pop',
+                      [tree('justin bieber',
+                            [tree('single',
+                                  [tree('what do you mean?')])]),
+                       tree('2015 pop mashup')]),
+                 tree('trance',
+                      [tree('darude',
+                            [tree('sandstorm')])])])
+
 
 def num_songs(t):
     """Return the number of songs in the pyTunes tree, t.
@@ -55,7 +71,10 @@ def num_songs(t):
     >>> num_songs(pytunes)
     3
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return 1
+    return sum([num_songs(b) for b in branches(t)])
+
 
 def add_song(t, song, category):
     """Returns a new tree with SONG added to CATEGORY. Assume the CATEGORY
@@ -74,7 +93,10 @@ def add_song(t, song, category):
           georgia
 
     """
-    "*** YOUR CODE HERE ***"
+    if root(t) == category:
+        return tree(root(t), branches(t) + [tree(song)])
+    return tree(root(t), [add_song(b, song, category) for b in branches(t)])
+
 
 # Tree ADT
 def tree(root, branches=[]):
@@ -82,11 +104,14 @@ def tree(root, branches=[]):
         assert is_tree(branch), 'branches must be trees'
     return [root] + list(branches)
 
+
 def root(tree):
     return tree[0]
 
+
 def branches(tree):
     return tree[1:]
+
 
 def is_tree(tree):
     if type(tree) != list or len(tree) < 1:
@@ -96,8 +121,10 @@ def is_tree(tree):
             return False
     return True
 
+
 def is_leaf(tree):
     return not branches(tree)
+
 
 def print_tree(t, indent=0):
     """Print a representation of this tree in which each node is
@@ -121,6 +148,7 @@ def print_tree(t, indent=0):
     print('  ' * indent + str(root(t)))
     for b in branches(t):
         print_tree(b, indent + 1)
+
 
 def copy_tree(t):
     """Returns a copy of t. Only for testing purposes.
