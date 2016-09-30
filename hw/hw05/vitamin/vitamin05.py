@@ -90,11 +90,8 @@ def replace_leaf(t, old, new):
     >>> laerad == yggdrasil # Make sure original tree is unmodified
     True
     """
-    if is_leaf(t):
-        if root(t) == old:
-            return tree(new)
-        else:
-            return tree(root(t))
+    if is_leaf(t) and root(t) == old:
+        return tree(new)
     else:
         return tree(root(t), [replace_leaf(b, old, new) for b in branches(t)])
 
@@ -110,4 +107,5 @@ def swap(a, b):
     >>> b
     [1, 'two', 3]
     """
-    a[:], b[:] = b[:], a[:]
+    # a[:], b[:] = b[:], a[:]
+    a[:], b[:] = list(b), list(a)

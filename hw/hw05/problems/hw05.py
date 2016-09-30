@@ -42,6 +42,7 @@ def move_stack(n, start, end):
 
 def interval(a, b):
     """Construct an interval from a to b."""
+    assert a <= b, 'Lower bound cannot be greater than upper bound'
     return [a, b]
 
 
@@ -84,14 +85,15 @@ def mul_interval(x, y):
 def sub_interval(x, y):
     """Return the interval that contains the difference between any value in x
     and any value in y."""
-    return interval(lower_bound(x) - upper_bound(y), upper_bound(x) - lower_bound(y))
+    negative_y = interval(-upper_bound(y), -lower_bound(y))
+    return add_interval(x, negative_y)
 
 
 def div_interval(x, y):
     """Return the interval that contains the quotient of any value in x divided by
     any value in y. Division is implemented as the multiplication of x by the
     reciprocal of y."""
-    assert 0 < lower_bound(y) or 0 > upper_bound(y), "Divided by an interval that spans zero"
+    assert not (lower_bound(y) <= 0 <= upper_bound(y)), "Divided by an interval that spans zero"
     reciprocal_y = interval(1/upper_bound(y), 1/lower_bound(y))
     return mul_interval(x, reciprocal_y)
 
@@ -122,7 +124,21 @@ def check_par():
 
 
 def multiple_references_explanation():
-    return """The multiple reference problem..."""
+    return """The multiple reference problem exists.  The true value
+    within a particular interval is fixed (though unknown).  Nested
+    combinations that refer to the same interval twice may assume two different
+    true values for the same interval, which is an error that results in
+    intervals that are larger than they should be.
+
+    Consider the case of i * i, where i is an interval from -1 to 1.  No value
+    within this interval, when squared, will give a negative result.  However,
+    our mul_interval function will allow us to choose 1 from the first
+    reference to i and -1 from the second, giving an erroneous lower bound of
+    -1.
+
+    Hence, a program like par2 is better than par1 because it never combines
+    the same interval more than once.
+    """
 
 
 def quadratic(x, a, b, c):
@@ -157,5 +173,65 @@ def polynomial(x, c):
     >>> str_interval(polynomial(interval(0.5, 2.25), [10, 24, -6, -8, 3]))
     '18.0 to 23.0'
     """
-    "*** YOUR CODE HERE ***"
+    def add_fn(coeff, k, f):
+        return lambda x: coeff * pow(x, k) + f(x)
 
+    def add_dfn(coeff, k, df):
+        return lambda x: k * coeff * pow(x, k-1) + df(x)
+
+    def add_ddfn(coeff, k, ddf):
+        return lambda x: k * (k-1) * coeff * pow(x, k-2) + ddf(x)
+
+    # Define the polynomial and its first and second derivatives.
+    f = lambda x: 0
+    df = lambda x: 0
+    ddf = lambda x: 0
+    for k, coeff in enumerate(c):
+        f = add_fn(coeff, k, f)
+        if k > 0:
+            df = add_dfn(coeff, k, df)
+        if k > 1:
+            ddf = add_ddfn(coeff, k, ddf)
+
+    # Find as many extreme points as we can using Newton's method
+    lower, upper = lower_bound(x), upper_bound(x)
+    num_steps = 20
+    step = (upper - lower) / num_steps
+    starts = [lower + k * step for k in range(num_steps)]
+    extremums = [find_zero(df, ddf, n) for n in starts]
+
+    # Filter for the interval x and return
+    ns = [n for n in extremums if lower < n < upper] + [lower, upper]
+    values = [f(n) for n in ns]
+    return interval(min(values), max(values))
+
+
+# Newton's method from lecture
+
+def improve(update, close, guess=1, max_updates=100):
+    """Iteratively improve guess with update until close(guess) is true or
+    max_updates have been applied."""
+    k = 0
+    while not close(guess) and k < max_updates:
+        guess = update(guess)
+        k += 1
+    return guess
+
+
+def approx_eq(x, y, tolerance=1e-15):
+    return abs(x - y) < tolerance
+
+
+def find_zero(f, df, guess=1):
+    """Return a zero of the function f with derivative df."""
+    def near_zero(x):
+        return approx_eq(f(x), 0)
+    return improve(newton_update(f, df), near_zero, guess)
+
+
+def newton_update(f, df):
+    """Return an update function for f with derivative df,
+    using Newton's method."""
+    def update(x):
+        return x - f(x) / df(x)
+    return update
