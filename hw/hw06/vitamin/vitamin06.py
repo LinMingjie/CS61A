@@ -18,7 +18,17 @@ def make_counter():
     >>> c('b') + c2('b')
     5
     """
-    "*** YOUR CODE HERE ***"
+    d = {}
+
+    def counter(s):
+        nonlocal d
+        if s in d:
+            d[s] += 1
+        else:
+            d[s] = 1
+        return d[s]
+    return counter
+
 
 def make_fib():
     """Returns a function that returns the next Fibonacci number
@@ -39,7 +49,14 @@ def make_fib():
     >>> fib() + sum([fib2() for _ in range(5)])
     12
     """
-    "*** YOUR CODE HERE ***"
+    n_1, n_2 = 1, -1
+
+    def fib():
+        nonlocal n_1, n_2
+        n_2, n_1 = n_1, n_1 + n_2
+        return n_1
+    return fib
+
 
 class Account:
     """An account has a balance and a holder.
@@ -77,13 +94,18 @@ class Account:
         """Subtract amount from balance if funds are available."""
         if amount > self.balance:
             return 'Insufficient funds'
-        self.balance = self.balance - amount
+        self.balance -= amount
         return self.balance
 
     def time_to_retire(self, amount):
         """Return the number of years until balance would grow to amount."""
         assert self.balance > 0 and amount > 0 and self.interest > 0
-        "*** YOUR CODE HERE ***"
+        balance, years = self.balance, 0
+        while balance < amount:
+            balance *= 1 + self.interest
+            years += 1
+        return years
+
 
 class FreeChecking(Account):
     """A bank account that charges for withdrawals, but the first two are free!
@@ -110,4 +132,9 @@ class FreeChecking(Account):
     withdraw_fee = 1
     free_withdrawals = 2
 
-    "*** YOUR CODE HERE ***"
+    def withdraw(self, amount):
+        if self.free_withdrawals:
+            self.free_withdrawals -= 1
+            return Account.withdraw(self, amount)
+        else:
+            return Account.withdraw(self, amount + self.withdraw_fee)

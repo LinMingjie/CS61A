@@ -2,16 +2,20 @@
 # Mobiles #
 ###########
 
+
 def tree(root, branches=[]):
     for branch in branches:
         assert is_tree(branch), 'branches must be trees'
     return [root] + list(branches)
 
+
 def root(tree):
     return tree[0]
 
+
 def branches(tree):
     return tree[1:]
+
 
 def is_tree(tree):
     if type(tree) != list or len(tree) < 1:
@@ -21,41 +25,51 @@ def is_tree(tree):
             return False
     return True
 
+
 def is_leaf(tree):
     return not branches(tree)
+
 
 def mobile(left, right):
     """Construct a mobile from a left side and a right side."""
     return tree(None, [left, right])
 
+
 def sides(m):
     """Select the sides of a mobile."""
     return branches(m)
+
 
 def side(length, mobile_or_weight):
     """Construct a side: a length of rod with a mobile or weight at the end."""
     return tree(length, [mobile_or_weight])
 
+
 def length(s):
     """Select the length of a side."""
     return root(s)
+
 
 def end(s):
     """Select the mobile or weight hanging at the end of a side."""
     return branches(s)[0]
 
+
 def weight(size):
     """Construct a weight of some size."""
     assert size > 0
-    "*** YOUR CODE HERE ***"
+    return tree(size)
+
 
 def size(w):
     """Select the size of a weight."""
-    "*** YOUR CODE HERE ***"
+    return w[0]
+
 
 def is_weight(w):
     """Whether w is a weight, not a mobile."""
-    "*** YOUR CODE HERE ***"
+    return is_leaf(w)
+
 
 def examples():
     t = mobile(side(1, weight(2)),
@@ -64,7 +78,7 @@ def examples():
                side(1, mobile(side(2, weight(3)),
                               side(3, weight(2)))))
     v = mobile(side(4, t), side(2, u))
-    return (t, u, v)
+    return t, u, v
 
 
 def total_weight(m):
@@ -83,6 +97,7 @@ def total_weight(m):
     else:
         return sum([total_weight(end(s)) for s in sides(m)])
 
+
 def balanced(m):
     """Return whether m is balanced.
 
@@ -99,7 +114,14 @@ def balanced(m):
     >>> balanced(mobile(side(1, w), side(1, v)))
     False
     """
-    "*** YOUR CODE HERE ***"
+    left, right = sides(m)
+    end_left, end_right = end(left), end(right)
+    if not is_weight(end_left) and not balanced(end_left):
+        return False
+    if not is_weight(end_right) and not balanced(end_right):
+        return False
+    return total_weight(end_left) * length(left) == total_weight(end_right) * length(right)
+
 
 def with_totals(m):
     """Return a mobile with total weights stored as the root of each mobile.
@@ -116,7 +138,8 @@ def with_totals(m):
     >>> [root(end(s)) for s in sides(v)]         # v should not change
     [None, None]
     """
-    "*** YOUR CODE HERE ***"
+    return tree(total_weight(m), [side(length(s), with_totals(end(s))) for s in sides(m)])
+
 
 ############
 # Mutation #
@@ -145,7 +168,22 @@ def make_withdraw(balance, password):
     >>> w(10, 'l33t')
     "Your account is locked. Attempts: ['hwat', 'a', 'n00b']"
     """
-    "*** YOUR CODE HERE ***"
+    incorrect_password, failure = [], 0
+
+    def withdraw(amount, try_password):
+        nonlocal balance, incorrect_password, failure
+        if failure >= 3:
+            return "Your account is locked. Attempts: " + str(incorrect_password)
+        if try_password != password:
+            incorrect_password += [try_password]
+            failure += 1
+            return 'Incorrect password'
+        if amount > balance:
+            return 'Insufficient funds'
+        balance -= amount
+        return balance
+    return withdraw
+
 
 def make_joint(withdraw, old_password, new_password):
     """Return a password-protected withdraw function that has joint access to
@@ -185,4 +223,13 @@ def make_joint(withdraw, old_password, new_password):
     >>> make_joint(w, 'hax0r', 'hello')
     "Your account is locked. Attempts: ['my', 'secret', 'password']"
     """
-    "*** YOUR CODE HERE ***"
+    ret_withdraw = withdraw(0, old_password)
+    if type(ret_withdraw) == str:
+        return ret_withdraw
+
+    def f(balance, password):
+        if password == new_password:
+            password = old_password
+        return withdraw(balance, password)
+    return f
+
