@@ -20,6 +20,7 @@ class Link:
         else:
             return 'Link({}, {})'.format(self.first, repr(self.rest))
 
+
 def digits(n):
     """Return the digits of n as a linked list.
 
@@ -31,5 +32,5 @@ def digits(n):
     s = Link.empty
     while n > 0:
         n, last = n // 10, n % 10
-        "*** YOUR CODE HERE ***"
+        s = Link(last, s)
     return s

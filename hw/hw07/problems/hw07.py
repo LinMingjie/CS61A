@@ -20,12 +20,17 @@ class Fib():
 
     def __init__(self):
         self.value = 0
+        self.previous = 1
 
     def next(self):
-        "*** YOUR CODE HERE ***"
+        next_fib = Fib()
+        next_fib.value = self.previous + self.value
+        next_fib.previous = self.value
+        return next_fib
 
     def __repr__(self):
         return str(self.value)
+
 
 class VendingMachine:
     """A vending machine that vends some product for some price.
@@ -60,7 +65,34 @@ class VendingMachine:
     >>> w.vend()
     'Here is your soda.'
     """
-    "*** YOUR CODE HERE ***"
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
+        self.stock = 0
+        self.balance = 0
+
+    def restock(self, i):
+        self.stock += i
+        return 'Current {0} stock: {1}'.format(self.name, self.stock)
+
+    def deposit(self, amount):
+        if self.stock == 0:
+            return 'Machine is out of stock. Here is your ${0}.'.format(amount)
+        self.balance += amount
+        return 'Current balance: ${0}'.format(self.balance)
+
+    def vend(self):
+        if self.stock == 0:
+            return 'Machine is out of stock.'
+        if self.balance < self.price:
+            return 'You must deposit ${0} more.'.format(self.price - self.balance)
+        change = ''
+        if self.balance > self.price:
+            change = ' and ${0} change'.format(self.balance - self.price)
+        self.balance = 0
+        self.stock -= 1
+        return 'Here is your {0}{1}.'.format(self.name, change)
+
 
 class MissManners:
     """A container class that only forward messages that say please.
@@ -99,5 +131,8 @@ class MissManners:
     def ask(self, message, *args):
         magic_word = 'please '
         if not message.startswith(magic_word):
-            return 'You must learn to say please first.'
-        "*** YOUR CODE HERE ***"
+            return 'You must learn to say {0}first.'.format(magic_word)
+        message = message[len(magic_word):]
+        if not hasattr(self.obj, message):
+            return 'Thanks for asking, but I know not how to {0}.'.format(message)
+        return getattr(self.obj, message)(*args)
