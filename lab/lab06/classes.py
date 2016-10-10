@@ -1,10 +1,10 @@
 # A "simple" adventure game.
-
 class Player(object):
     def __init__(self, name, place):
         """Create a player object."""
         self.name = name
         self.place = place
+        self.backpack = []
 
     def look(self):
         self.place.look()
@@ -35,8 +35,9 @@ class Player(object):
         destination_place = self.place.get_neighbor(location)
         if destination_place.locked:
             print(destination_place.name, 'is locked! Go look for a key to unlock it')
-        "*** YOUR CODE HERE ***"
-
+        else:
+            self.place = destination_place
+        print('You are at', self.place.name)
 
     def talk_to(self, person):
         """Talk to person if person is at player's current place.
@@ -53,8 +54,10 @@ class Player(object):
         """
         if type(person) != str:
             print('Person has to be a string.')
-        "*** YOUR CODE HERE ***"
-
+        elif person not in self.place.characters:
+            print(person, 'is not here.')
+        else:
+            print(person, 'says:', self.place.characters[person].talk())
 
     def take(self, thing):
         """Take a thing if thing is at player's current place
@@ -79,7 +82,11 @@ class Player(object):
         """
         if type(thing) != str:
             print('Thing should be a string.')
-        "*** YOUR CODE HERE ***"
+        elif thing not in self.place.things:
+            print(thing, 'is not here.')
+        else:
+            self.backpack.append(self.place.take(thing))
+            print(self.name, 'takes the', self.backpack[-1].name)
 
     def check_backpack(self):
         """Print each item with its description and return a list of item names.
@@ -151,7 +158,9 @@ class Player(object):
         for item in self.backpack:
             if type(item) == Key:
                 key = item
-        "*** YOUR CODE HERE ***"
+                key.use(self.place.get_neighbor(place))
+                return
+        print(place, "can't be unlocked without a key!")
 
 
 class Character(object):
@@ -171,7 +180,15 @@ class Thing(object):
     def use(self, place):
         print("You can't use a {0} here".format(self.name))
 
-""" Implement Key here! """
+
+class Key(Thing):
+    def use(self, place):
+        if(place.locked):
+            place.locked = False
+            print(place.name, 'is now unlocked!')
+        else:
+            print(place.name, 'is already unlocked!')
+
 
 class Treasure(Thing):
     def __init__(self, name, description, value, weight):
