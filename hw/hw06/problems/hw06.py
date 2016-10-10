@@ -63,7 +63,7 @@ def weight(size):
 
 def size(w):
     """Select the size of a weight."""
-    return w[0]
+    return root(w)
 
 
 def is_weight(w):
@@ -114,13 +114,13 @@ def balanced(m):
     >>> balanced(mobile(side(1, w), side(1, v)))
     False
     """
+    if is_weight(m):
+        return True
     left, right = sides(m)
-    end_left, end_right = end(left), end(right)
-    if not is_weight(end_left) and not balanced(end_left):
-        return False
-    if not is_weight(end_right) and not balanced(end_right):
-        return False
-    return total_weight(end_left) * length(left) == total_weight(end_right) * length(right)
+    left_s, right_s = end(left), end(right)
+    torque_left = length(left) * total_weight(left_s)
+    torque_right = length(right) * total_weight(right_s)
+    return balanced(left_s) and balanced(right_s) and torque_left == torque_right
 
 
 def with_totals(m):
@@ -138,7 +138,9 @@ def with_totals(m):
     >>> [root(end(s)) for s in sides(v)]         # v should not change
     [None, None]
     """
-    return tree(total_weight(m), [side(length(s), with_totals(end(s))) for s in sides(m)])
+    total = total_weight(m)
+    ends = [with_totals(end(s)) for s in sides(m)]
+    return tree(total, [side(length(s), t) for s, t in zip(sides(m), ends)])
 
 
 ############
@@ -168,15 +170,14 @@ def make_withdraw(balance, password):
     >>> w(10, 'l33t')
     "Your account is locked. Attempts: ['hwat', 'a', 'n00b']"
     """
-    incorrect_password, failure = [], 0
+    incorrect_password = []
 
-    def withdraw(amount, try_password):
-        nonlocal balance, incorrect_password, failure
-        if failure >= 3:
+    def withdraw(amount, password_attempt):
+        nonlocal balance, incorrect_password
+        if len(incorrect_password) >= 3:
             return "Your account is locked. Attempts: " + str(incorrect_password)
-        if try_password != password:
-            incorrect_password += [try_password]
-            failure += 1
+        if password_attempt != password:
+            incorrect_password.append(password_attempt)
             return 'Incorrect password'
         if amount > balance:
             return 'Insufficient funds'
@@ -223,13 +224,13 @@ def make_joint(withdraw, old_password, new_password):
     >>> make_joint(w, 'hax0r', 'hello')
     "Your account is locked. Attempts: ['my', 'secret', 'password']"
     """
-    ret_withdraw = withdraw(0, old_password)
-    if type(ret_withdraw) == str:
-        return ret_withdraw
+    ret = withdraw(0, old_password)
+    if type(ret) == str:
+        return ret
 
-    def f(balance, password):
-        if password == new_password:
-            password = old_password
-        return withdraw(balance, password)
-    return f
+    def joint(amount, password_attempt):
+        if password_attempt == new_password:
+            password_attempt = old_password
+        return withdraw(amount, password_attempt)
+    return joint
 

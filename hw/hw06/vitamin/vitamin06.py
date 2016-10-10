@@ -20,13 +20,9 @@ def make_counter():
     """
     d = {}
 
-    def counter(s):
-        nonlocal d
-        if s in d:
-            d[s] += 1
-        else:
-            d[s] = 1
-        return d[s]
+    def counter(key):
+        d[key] = d.get(key, 0) + 1
+        return d[key]
     return counter
 
 
@@ -49,12 +45,13 @@ def make_fib():
     >>> fib() + sum([fib2() for _ in range(5)])
     12
     """
-    n_1, n_2 = 1, -1
+    cur, next = 0, 1
 
     def fib():
-        nonlocal n_1, n_2
-        n_2, n_1 = n_1, n_1 + n_2
-        return n_1
+        nonlocal cur, next
+        result = cur
+        cur, next = next, cur + next
+        return result
     return fib
 
 
@@ -100,9 +97,9 @@ class Account:
     def time_to_retire(self, amount):
         """Return the number of years until balance would grow to amount."""
         assert self.balance > 0 and amount > 0 and self.interest > 0
-        balance, years = self.balance, 0
-        while balance < amount:
-            balance *= 1 + self.interest
+        future, years = self.balance, 0
+        while future < amount:
+            future *= 1 + self.interest
             years += 1
         return years
 
@@ -136,5 +133,4 @@ class FreeChecking(Account):
         if self.free_withdrawals:
             self.free_withdrawals -= 1
             return Account.withdraw(self, amount)
-        else:
-            return Account.withdraw(self, amount + self.withdraw_fee)
+        return Account.withdraw(self, amount + self.withdraw_fee)
