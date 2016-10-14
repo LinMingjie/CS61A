@@ -1,5 +1,6 @@
 ## Recursive Objects ##
 
+
 # Q2
 def list_to_link(lst):
     """Takes a Python list and returns a Link with the same elements.
@@ -8,7 +9,11 @@ def list_to_link(lst):
     >>> print_link(link)
     <1 2 3>
     """
-    "*** YOUR CODE HERE ***"
+    if len(lst) == 1:
+        return Link(lst[0])
+    else:
+        return Link(lst[0], list_to_link(lst[1:]))
+
 
 # Q3
 def link_to_list(link):
@@ -20,10 +25,14 @@ def link_to_list(link):
     >>> link_to_list(Link.empty)
     []
     """
-    "*** YOUR CODE HERE ***"
+    if link == Link.empty:
+        return []
+    else:
+        return [link.first] + link_to_list(link.rest)
+
 
 # Q4
-def remove_all(link , value):
+def remove_all(link, value):
     """Remove all the nodes containing value. Assume there exists some
     nodes to be removed and the first element is never removed.
 
@@ -37,7 +46,13 @@ def remove_all(link , value):
     >>> print_link(l1)
     <0 1>
     """
-    "*** YOUR CODE HERE ***"
+    if link.rest != Link.empty:
+        if link.rest.first == value:
+            link.rest = link.rest.rest
+            remove_all(link, value)
+        else:
+            remove_all(link.rest, value)
+
 
 # Linked List Class
 class Link:
@@ -115,6 +130,7 @@ class Link:
         if self.rest is not Link.empty:
             self.rest.map(f)
 
+
 def print_link(link):
     """Print elements of a linked list link.
 
@@ -130,13 +146,15 @@ def print_link(link):
     """
     print('<' + helper(link).rstrip() + '>')
 
+
 def helper(link):
     if link == Link.empty:
         return ''
     elif isinstance(link.first, Link):
         return '<' + helper(link.first).rstrip() + '> ' + helper(link.rest)
     else:
-        return str(link.first) +' '+  helper(link.rest)
+        return str(link.first) + ' ' + helper(link.rest)
+
 
 # Tree Class
 class Tree:

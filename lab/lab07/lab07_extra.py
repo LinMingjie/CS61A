@@ -1,7 +1,8 @@
 from lab07 import *
 
+
 # Q6
-def reverse_other(t):
+def reverse_other(t, level=1):
     """Reverse the roots of every other level of the tree using mutation.
 
     >>> t = Tree(1, [Tree(2), Tree(3), Tree(4)])
@@ -13,7 +14,15 @@ def reverse_other(t):
     >>> t
     Tree(1, [Tree(3, [Tree(5, [Tree(8), Tree(7)]), Tree(6)]), Tree(2)])
     """
-    "*** YOUR CODE HERE ***"
+    if level % 2 == 1:
+        root = []
+        for b in t.branches:
+            root.append(b.root)
+        for b, new_root in zip(t.branches, reversed(root)):
+            b.root = new_root
+    for b in t.branches:
+        reverse_other(b, level + 1)
+
 
 # Q7
 def cumulative_sum(t):
@@ -25,7 +34,10 @@ def cumulative_sum(t):
     >>> t
     Tree(16, [Tree(8, [Tree(5)]), Tree(7)])
     """
-    "*** YOUR CODE HERE ***"
+    for b in t.branches:
+        cumulative_sum(b)
+        t.root += b.root
+
 
 # Q8
 def deep_map_mut(fn, link):
@@ -40,7 +52,13 @@ def deep_map_mut(fn, link):
     >>> print_link(link1)
     <9 <16> 25 36>
     """
-    "*** YOUR CODE HERE ***"
+    if type(link.first) == Link:
+        deep_map_mut(fn, link.first)
+    else:
+        link.first = fn(link.first)
+    if link.rest != Link.empty:
+        deep_map_mut(fn, link.rest)
+
 
 # Q9
 def has_cycle(link):
@@ -57,7 +75,14 @@ def has_cycle(link):
     >>> has_cycle(u)
     False
     """
-    "*** YOUR CODE HERE ***"
+    iterated = []
+    while link.rest != Link.empty:
+        if link in iterated:
+            return True
+        iterated.append(link)
+        link = link.rest
+    return False
+
 
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
@@ -70,4 +95,9 @@ def has_cycle_constant(link):
     >>> has_cycle_constant(t)
     False
     """
-    "*** YOUR CODE HERE ***"
+    head = link
+    while link.rest != Link.empty:
+        link = link.rest
+        if link is head:
+            return True
+    return False
