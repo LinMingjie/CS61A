@@ -23,10 +23,10 @@ class Fib():
         self.previous = 1
 
     def next(self):
-        next_fib = Fib()
-        next_fib.value = self.previous + self.value
-        next_fib.previous = self.value
-        return next_fib
+        result = Fib()
+        result.value = self.previous + self.value
+        result.previous = self.value
+        return result
 
     def __repr__(self):
         return str(self.value)
@@ -84,11 +84,12 @@ class VendingMachine:
     def vend(self):
         if self.stock == 0:
             return 'Machine is out of stock.'
-        if self.balance < self.price:
-            return 'You must deposit ${0} more.'.format(self.price - self.balance)
+        difference = self.price - self.balance
+        if difference > 0:
+            return 'You must deposit ${0} more.'.format(difference)
         change = ''
-        if self.balance > self.price:
-            change = ' and ${0} change'.format(self.balance - self.price)
+        if difference != 0:
+            change = ' and ${0} change'.format(-difference)
         self.balance = 0
         self.stock -= 1
         return 'Here is your {0}{1}.'.format(self.name, change)
@@ -132,7 +133,7 @@ class MissManners:
         magic_word = 'please '
         if not message.startswith(magic_word):
             return 'You must learn to say {0}first.'.format(magic_word)
-        message = message[len(magic_word):]
-        if not hasattr(self.obj, message):
-            return 'Thanks for asking, but I know not how to {0}.'.format(message)
-        return getattr(self.obj, message)(*args)
+        attr = message[len(magic_word):]
+        if not hasattr(self.obj, attr):
+            return 'Thanks for asking, but I know not how to {0}.'.format(attr)
+        return getattr(self.obj, attr)(*args)
