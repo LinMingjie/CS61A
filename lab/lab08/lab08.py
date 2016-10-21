@@ -11,7 +11,13 @@ def deep_len(lnk):
     >>> deep_len(levels)
     5
     """
-    "*** YOUR CODE HERE ***"
+    if lnk is Link.empty:
+        return 0
+    elif isinstance(lnk.first, Link):
+        return deep_len(lnk.first) + deep_len(lnk.rest)
+    else:
+        return 1 + deep_len(lnk.rest)
+
 
 def make_to_string(front, mid, back, empty_repr):
     """ Returns a function that turns linked lists to strings.
@@ -28,7 +34,12 @@ def make_to_string(front, mid, back, empty_repr):
     >>> michelles_to_string(Link.empty)
     '()'
     """
-    "*** YOUR CODE HERE ***"
+    def printer(lst):
+        if lst is Link.empty:
+            return empty_repr
+        return front + str(lst.first) + mid + printer(lst.rest) + back
+    return printer
+
 
 def tree_map(fn, t):
     """Maps the function fn over the entries of tree and returns the
@@ -52,7 +63,8 @@ def tree_map(fn, t):
           128
         256
     """
-    "*** YOUR CODE HERE ***"
+    return Tree(fn(t.root), [tree_map(fn, b) for b in t.branches])
+
 
 def add_trees(t1, t2):
     """
@@ -89,7 +101,20 @@ def add_trees(t1, t2):
         5
       5
     """
-    "*** YOUR CODE HERE ***"
+    if not t1:
+        return t2
+    if not t2:
+        return t1
+    new_entry = t1.root + t2.root
+    t1_branches, t2_branches = list(t1.branches), list(t2.branches)
+    length_t1, length_t2 = len(t1_branches), len(t2_branches)
+    if length_t1 < length_t2:
+        t1_branches += [None for _ in range(length_t1, length_t2)]
+    elif length_t1 > length_t2:
+        t2_branches += [None for _ in range(length_t2, length_t1)]
+    return Tree(new_entry, [add_trees(branch1, branch2)
+                            for branch1, branch2 in zip(t1_branches, t2_branches)])
+
 
 # Link
 class Link:
@@ -113,6 +138,8 @@ class Link:
             return 'Link({})'.format(self.first)
         else:
             return 'Link({}, {})'.format(self.first, repr(self.rest))
+
+
 def print_link(link):
     """Print elements of a linked list link.
 
@@ -128,6 +155,7 @@ def print_link(link):
     """
     print('<' + helper(link).rstrip() + '>')
 
+
 def helper(link):
     if link == Link.empty:
         return ''
@@ -135,6 +163,7 @@ def helper(link):
         return '<' + helper(link.first).rstrip() + '> ' + helper(link.rest)
     else:
         return str(link.first) +' '+  helper(link.rest)
+
 
 # Tree
 class Tree:
@@ -153,6 +182,7 @@ class Tree:
 
     def is_leaf(self):
         return not self.branches
+
 
 def print_tree(t, indent=0):
     """Print a representation of this tree in which each node is
