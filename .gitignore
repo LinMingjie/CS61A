@@ -11,3 +11,6 @@ ok
 __pycache__/
 *.py[cod]
 *$py.class
+
+# scheme:
+scheme
