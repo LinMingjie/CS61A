@@ -19,26 +19,25 @@
 (define (square x) (* x x))
 
 (define (pow b n)
-  (cond
-    ((= n 1) b)
-    ((even? n) (square (pow b (/ n 2))))
-    ((odd? n)  (* b (square (pow b (/ (- n 1) 2))))))
+  (cond ((= n 0) 1)
+        ((even? n) (square (pow b (/ n 2))))
+        (else (* b (pow b (- n 1)))))
 )
 
 (define (ordered? s)
-  (if (null? (cdr s))
+  (if (or (null? s) (null? (cdr s)))
       #t
-      (if (> (car s) (cadr s))
-          #f
-          (ordered? (cdr s))))
+      (and (<= (car s) (cadr s)) (ordered? (cdr s))))
 )
 
 (define (nodots s)
-  (cond
-    ((null? s) '())
-    ((number? s) (cons s '()))
-    ((pair? (car s)) (cons (nodots (car s)) (nodots (cdr s))))
-    (else (cons (car s) (nodots (cdr s)))))
+  (define (dotted s) (and (pair? s)
+                          (not (or (pair? (cdr s))
+                                   (null? (cdr s))))))
+  (cond ((null? s) s)
+        ((dotted s) (list (nodots (car s)) (cdr s)))
+        ((pair? s) (cons (nodots (car s)) (nodots (cdr s))))
+        (else s))
 )
 
 ; Sets as sorted lists
