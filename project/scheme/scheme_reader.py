@@ -21,6 +21,7 @@ from buffer import Buffer, InputReader, LineReader
 
 # Pairs and Scheme lists
 
+
 class Pair:
     """A pair has two instance attributes: first and second.  For a Pair to be
     a well-formed list, second is either a well-formed list or nil.  Some
@@ -73,6 +74,7 @@ class Pair:
         else:
             raise TypeError('ill-formed list')
 
+
 class nil:
     """The empty list"""
 
@@ -88,7 +90,7 @@ class nil:
     def map(self, fn):
         return self
 
-nil = nil() # Assignment hides the nil class; there is only one instance
+nil = nil()  # Assignment hides the nil class; there is only one instance
 
 # Scheme list parser
 
@@ -107,23 +109,24 @@ def scheme_read(src):
     """
     if src.current() is None:
         raise EOFError
-    val = src.remove_front() # Get the first token
+    val = src.remove_front()  # Get the first token
     if val == 'nil':
         # BEGIN PROBLEM 1
-        "*** REPLACE THIS LINE ***"
+        return nil
         # END PROBLEM 1
     elif val == '(':
         # BEGIN PROBLEM 1
-        "*** REPLACE THIS LINE ***"
+        return read_tail(src)
         # END PROBLEM 1
     elif val == "'":
         # BEGIN PROBLEM 7B
-        "*** REPLACE THIS LINE ***"
+        return Pair('quote', Pair(scheme_read(src), nil))
         # END PROBLEM 7B
     elif val not in DELIMITERS:
         return val
     else:
         raise SyntaxError('unexpected token: {0}'.format(val))
+
 
 def read_tail(src):
     """Return the remainder of a list in SRC, starting before an element or ).
@@ -140,24 +143,35 @@ def read_tail(src):
             raise SyntaxError('unexpected end of file')
         elif src.current() == ')':
             # BEGIN PROBLEM 1
-            "*** REPLACE THIS LINE ***"
+            src.remove_front()
+            return nil
             # END PROBLEM 1
         elif src.current() == '.':
             # BEGIN PROBLEM 2
-            "*** REPLACE THIS LINE ***"
+            src.remove_front()
+            exp = scheme_read(src)
+            if src.current() == ')':
+                src.remove_front()
+                return exp
+            else:
+                raise SyntaxError('unexpected token: {0}'.format(src.current()))
             # END PROBLEM 2
         else:
             # BEGIN PROBLEM 1
-            "*** REPLACE THIS LINE ***"
+            first = scheme_read(src)
+            rest = read_tail(src)
+            return Pair(first, rest)
             # END PROBLEM 1
     except EOFError:
         raise SyntaxError('unexpected end of file')
 
 # Convenience methods
 
+
 def buffer_input(prompt='scm> '):
     """Return a Buffer instance containing interactive input."""
     return Buffer(tokenize_lines(InputReader(prompt)))
+
 
 def buffer_lines(lines, prompt='scm> ', show_prompt=False):
     """Return a Buffer instance iterating through LINES."""
@@ -167,9 +181,11 @@ def buffer_lines(lines, prompt='scm> ', show_prompt=False):
         input_lines = LineReader(lines, prompt)
     return Buffer(tokenize_lines(input_lines))
 
+
 def read_line(line):
     """Read a single string LINE as a Scheme expression."""
     return scheme_read(Buffer(tokenize_lines([line])))
+
 
 # Interactive loop
 

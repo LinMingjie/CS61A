@@ -2,6 +2,7 @@
 
 import math
 
+
 class Buffer:
     """A Buffer provides a way of accessing a sequence of tokens across lines.
 
@@ -99,6 +100,7 @@ try:
 except:
     pass
 
+
 class InputReader:
     """An InputReader is an iterable that prompts the user for input."""
     def __init__(self, prompt):
@@ -108,6 +110,7 @@ class InputReader:
         while True:
             yield input(self.prompt)
             self.prompt = ' ' * len(self.prompt)
+
 
 class LineReader:
     """A LineReader is an iterable that prints lines after a prompt."""

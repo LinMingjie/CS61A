@@ -58,7 +58,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Move the following (exit) line to run additional tests. ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(exit)
+; (exit)
 
 
 ;;; 1.1.2
@@ -198,6 +198,7 @@ circumference
 (sum-integers 1 10)
 ; expect 55
 
+(exit)
 ;;; 1.3.2
 
 ((lambda (x y z) (+ x y (square z))) 1 2 3)

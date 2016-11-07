@@ -26,6 +26,7 @@ _SINGLE_CHAR_TOKENS = set("()[]'`")
 _TOKEN_END = _WHITESPACE | _SINGLE_CHAR_TOKENS | _STRING_DELIMS | {',', ',@'}
 DELIMITERS = _SINGLE_CHAR_TOKENS | {'.', ',', ',@'}
 
+
 def valid_symbol(s):
     """Returns whether s is a well-formed symbol."""
     if len(s) == 0:
@@ -34,6 +35,7 @@ def valid_symbol(s):
         if c not in _SYMBOL_CHARS:
             return False
     return True
+
 
 def next_candidate_token(line, k):
     """A tuple (tok, k'), where tok is the next substring of line at or
@@ -72,6 +74,7 @@ def next_candidate_token(line, k):
                 j += 1
             return line[k:j], min(j, len(line))
     return None, len(line)
+
 
 def tokenize_line(line):
     """The list of Scheme tokens on line.  Excludes comments and whitespace."""
@@ -112,15 +115,18 @@ def tokenize_line(line):
         text, i = next_candidate_token(line, i)
     return result
 
+
 def tokenize_lines(input):
     """An iterator over lists of tokens, one for each line of the iterable
     input sequence."""
     return map(tokenize_line, input)
 
+
 def count_tokens(input):
     """Count the number of non-delimiter tokens in input."""
     return len(list(filter(lambda x: x not in DELIMITERS,
                            itertools.chain(*tokenize_lines(input)))))
+
 
 @main
 def run(*args):
