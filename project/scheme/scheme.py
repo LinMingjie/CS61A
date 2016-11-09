@@ -334,8 +334,17 @@ def make_let_frame(bindings, env):
     if not scheme_listp(bindings):
         raise SchemeError('bad bindings list in let form')
     # BEGIN PROBLEM 15
-    "*** REPLACE THIS LINE ***"
+    formals = vals = nil
+    while bindings is not nil:
+        target = bindings.first
+        bindings = bindings.second
+        check_form(target, 2, 2)
+        formals = Pair(target.first, formals)
+        vals = Pair(scheme_eval(target.second.first, env), vals)
+    check_formals(formals)
+    return env.make_child_frame(formals, vals)
     # END PROBLEM 15
+
 
 SPECIAL_FORMS = {
     'and': do_and_form,
@@ -417,7 +426,10 @@ class MuProcedure(UserDefinedProcedure):
         self.body = body
 
     # BEGIN PROBLEM 16
-    "*** REPLACE THIS LINE ***"
+    def make_call_frame(self, args, env):
+        """Make a frame that binds the formal parameters to ARGS, a Scheme list
+        of values, for a dynamically-scoped call evaluated in environment ENV."""
+        return env.make_child_frame(self.formals, args)
     # END PROBLEM 16
 
     def __str__(self):
@@ -434,7 +446,7 @@ def do_mu_form(expressions, env):
     formals = expressions.first
     check_formals(formals)
     # BEGIN PROBLEM 16
-    "*** REPLACE THIS LINE ***"
+    return MuProcedure(formals, expressions.second)
     # END PROBLEM 16
 
 SPECIAL_FORMS['mu'] = do_mu_form
