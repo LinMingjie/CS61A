@@ -10,11 +10,11 @@ def in_order(t):
     >>> list(in_order(BTree(1)))
     [1]
     """
-    if t.left is not BTree.empty:
-        yield from in_order(t.left)
+    if t is BTree.empty:
+        return
+    yield from in_order(t.left)
     yield t.root
-    if t.right is not BTree.empty:
-        yield from in_order(t.right)
+    yield from in_order(t.right)
 
 
 def permutations(lst):
