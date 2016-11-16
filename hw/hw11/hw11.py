@@ -10,7 +10,12 @@ def in_order(t):
     >>> list(in_order(BTree(1)))
     [1]
     """
-    "*** YOUR CODE HERE ***"
+    if t.left is not BTree.empty:
+        yield from in_order(t.left)
+    yield t.root
+    if t.right is not BTree.empty:
+        yield from in_order(t.right)
+
 
 def permutations(lst):
     """Generates all permutations of sequence LST. Each permutation is a
@@ -30,7 +35,10 @@ def permutations(lst):
     if not lst:
         yield []
         return
-    "*** YOUR CODE HERE ***"
+    for i in range(len(lst)):
+        for rest in permutations(lst[:i] + lst[i+1:]):
+            yield [lst[i]] + rest
+
 
 class Tree:
     def __init__(self, root, branches=[]):
@@ -48,6 +56,7 @@ class Tree:
 
     def is_leaf(self):
         return not self.branches
+
 
 def print_tree(t, indent=0):
     """Print a representation of this tree in which each node is
@@ -71,6 +80,7 @@ def print_tree(t, indent=0):
     print('  ' * indent + str(t.root))
     for b in t.branches:
         print_tree(b, indent + 1)
+
 
 # Binary trees
 
@@ -106,6 +116,8 @@ class BTree(Tree):
                 left = 'BTree.empty'
             template = 'BTree({0}, {1}, {2})'
             return template.format(self.root, left, right)
+
+
 # Binary search trees
 
 def bst(values):
