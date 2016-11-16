@@ -6,6 +6,18 @@
 )
 
 
+
+;(define (substitute s old new)
+;  (cond ((null? s) nil)
+;        ((pair? (car s)) (cons (substitute (car s) old new)
+;                               (substitute (cdr s) old new)))
+;        ((equal? (car s) old) (cons new
+;                               (substitute (cdr s) old new)))
+;        (else (cons (car s) (substitute (cdr s) old new))))
+;)
+
+
+
 (define (sub-all s olds news)
   (if (null? olds)
       s
@@ -72,13 +84,13 @@
 )
 
 
- 
+
 
 ; Exponentiations are represented as lists that start with ^.
 (define (make-exp base exponent)
-  (cond ((number? base) (expt base exponent))
-        ((=number? exponent 0) 1)
+  (cond ((=number? exponent 0) 1)   
         ((=number? exponent 1) base)
+        ((and (number? base) (number? exponent)) (expt base exponent))
         (else (list '^ base exponent)))
 )
 
@@ -95,6 +107,11 @@
 (define x^3 (make-exp 'x 3))
 
 (define (derive-exp exp var)
-  (make-product (exponent exp)
-                (make-exp (base exp) (- (exponent exp) 1)))
+  (let ((b (base exp))
+        (n (exponent exp)))
+    (if (number? n)
+        (let ((n-1 (make-sum n -1)))
+          (let ((first (make-product n (make-exp b n-1))))
+            (make-product first (derive b var))))
+        'unknown))
 )
