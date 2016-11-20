@@ -1,5 +1,6 @@
 # Extra Questions
 
+
 # Q8
 def scale(s, k):
     """Yield elements of the iterable s scaled by a number k.
@@ -14,7 +15,9 @@ def scale(s, k):
     >>> [next(m) for _ in range(5)]
     [2, 4, 6, 8, 10]
     """
-    "*** YOUR CODE HERE ***"
+    for elem in s:
+        yield k * elem
+
 
 # Q9
 def merge(s0, s1):
@@ -32,7 +35,15 @@ def merge(s0, s1):
     """
     i0, i1 = iter(s0), iter(s1)
     e0, e1 = next(i0), next(i1)
-    "*** YOUR CODE HERE ***"
+    while True:
+        yield min(e0, e1)
+        if e0 == e1:
+            e0, e1 = next(i0), next(i1)
+        elif e0 < e1:
+            e0 = next(i0)
+        else:
+            e1 = next(i1)
+
 
 # Q10
 def remainders_generator(m):
@@ -57,7 +68,15 @@ def remainders_generator(m):
     7
     11
     """
-    "*** YOUR CODE HERE ***"
+    def remainder(r):
+        start = r
+        while True:
+            yield start
+            start += m
+
+    for i in range(m):
+        yield remainder(i)
+
 
 # the naturals generator is used for testing scale and merge functions
 def naturals():
@@ -75,6 +94,7 @@ def naturals():
         yield i
         i += 1
 
+
 # Q11
 def zip(*iterables):
     """
@@ -88,4 +108,6 @@ def zip(*iterables):
     [1, 4, 7]
     [2, 5, 8]
     """
-    "*** YOUR CODE HERE ***"
+    iterators = [iter(iterable) for iterable in iterables]
+    while True:
+        yield [next(iterator) for iterator in iterators]
