@@ -277,13 +277,13 @@ def do_if_form(expressions, env):
 def do_and_form(expressions, env):
     """Evaluate a short-circuited and form."""
     # BEGIN PROBLEM 13
-    if expressions is nil:
-        return True
-    while expressions.second is not nil:
-        if scheme_falsep(scheme_eval(expressions.first, env)):
+    last = True
+    while expressions is not nil:
+        last = scheme_eval(expressions.first, env)
+        if scheme_falsep(last):
             return False
         expressions = expressions.second
-    return scheme_eval(expressions.first, env)
+    return last
     # END PROBLEM 13
 
 

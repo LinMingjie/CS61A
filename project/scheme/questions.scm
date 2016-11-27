@@ -5,10 +5,13 @@
 
 ; Some utility functions that you may find useful to implement.
 (define (map proc items)
-  'replace-this-line)
+  (cond ((null? items) '())
+        ((pair? items) (cons (proc (car items)) (map proc (cdr items))))
+        (else (proc items))))
 
 (define (cons-all first rests)
-  'replace-this-line)
+  (map (lambda (item) (cons first item)) rests)
+  )
 
 (define (zip pairs)
   'replace-this-line)
@@ -16,17 +19,26 @@
 ;; Problem 17
 ;; Returns a list of two-element lists
 (define (enumerate s)
-  ; BEGIN PROBLEM 17
-  'replace-this-line
+  (define (helper s n)
+    (cond ((null? s) '())
+          ((pair? s) (cons
+                      (cons n (cons (car s) '()))
+                      (helper (cdr s) (+ n 1))))
+          (else (cons n (cons s '())))))
+  (helper s 0)
   )
   ; END PROBLEM 17
 
 ;; Problem 18
 ;; List all ways to make change for TOTAL with DENOMS
 (define (list-change total denoms)
-  ; BEGIN PROBLEM 18
-  'replace-this-line
-  )
+  (define (repeat n x)
+    (if (= n 0) '() (cons x (repeat (- n 1) x))))
+  (cond ((= total 0) '(()))
+        ((null? (cdr denoms)) (list (repeat total (car denoms))))
+        ((< total (car denoms)) (list-change total (cdr denoms)))
+        (else (append (cons-all (car denoms) (list-change (- total (car denoms)) denoms))
+                      (list-change total (cdr denoms))))))
   ; END PROBLEM 18
 
 ;; Problem 19
