@@ -48,44 +48,39 @@ create table sentences as
 
 -- Ways to stack 4 dogs to a height of at least 170, ordered by total height
 create table stacks as
-  with stacks(stack, total_height, num_dogs, last_height) as(
+  with sums(names, total, n, max) as(
       select name, height, 1, height from dogs union
-      select stack || ", " || name, total_height + height, num_dogs + 1, height from stacks, dogs
-      where last_height < height and num_dogs < 4
+      select names || ", " || name, total + height, n + 1, height from sums, dogs
+      where max < height and n < 4
   )
-  select stack, total_height from stacks
-  where num_dogs = 4 and total_height >= 170 order by total_height;
+  select names, total from sums where n = 4 and total >= 170 order by total;
 
 -- non_parents is an optional, but recommended question
 -- All non-parent relations ordered by height difference
 create table non_parents as
-  with pair(d1, d2, diff) as(
-    with ancestors(ancestor, descendant) as(
-        select a.parent, b.child from parents as a, parents as b where a.child = b.parent union
-        select ancestor, child from ancestors, parents where parent = descendant
-    )
-    select ancestor, descendant, a.height - b.height as diff from ancestors, dogs as a, dogs as b
-    where a.name = ancestor and b.name = descendant
-    union
-    select descendant, ancestor, b.height - a.height as diff from ancestors, dogs as a, dogs as b
-    where a.name = ancestor and b.name = descendant
+  with ancestors(ancestor, descendent) as(
+      select a.parent, b.child from parents as a, parents as b where a.child = b.parent union
+      select ancestor, child from ancestors, parents where parent = descendent
+  ),
+  relations(first, second) as(
+      select ancestor, descendent from ancestors union
+      select descendent, ancestor from ancestors
   )
-  select d1, d2 from pair order by diff;
+  select first, second from relations, dogs as f, dogs as s
+  where first = f.name and second = s.name order by f.height - s.height;
 
 create table ints as
-    with i(n) as (
-        select 1 union
-        select n+1 from i limit 100
-    )
-    select n from i;
+  with i(n) as (
+      select 1 union
+      select n+1 from i limit 100
+  )
+  select n from i;
 
 create table divisors as
-    with divisors(n, total, last) as(
-        select n, 1, 1 from ints union
-        select d.n, total + 1, i.n from divisors as d, ints as i
-        where d.n % i.n = 0 and last < i.n and i.n <= d.n
-    )
-    select n, max(total) as divisor from divisors group by n order by n;
+  select a.n * b.n as n, count(*) as divisors
+  from ints as a, ints as b
+  where a.n * b.n <= 100
+  group by a.n * b.n;
 
 create table primes as
-    select n from divisors where divisor = 2;
+  select n from divisors where divisors = 2;
