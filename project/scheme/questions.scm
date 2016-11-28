@@ -5,16 +5,16 @@
 
 ; Some utility functions that you may find useful to implement.
 (define (map proc items)
-  (cond ((null? items) '())
-        ((pair? items) (cons (proc (car items)) (map proc (cdr items))))
-        (else (proc items))))
+  (if (null? items)
+      '()
+      (cons (proc (car items)) (map proc (cdr items)))))
 
 (define (cons-all first rests)
   (map (lambda (item) (cons first item)) rests)
-  )
+)
 
 (define (zip pairs)
-  'replace-this-line)
+  (list (map car pairs) (map cadr pairs)))
 
 ;; Problem 17
 ;; Returns a list of two-element lists
@@ -55,12 +55,12 @@
 (define (let-to-lambda expr)
   (cond ((atom? expr)
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         expr
          ; END PROBLEM 19
          )
         ((quoted? expr)
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         expr
          ; END PROBLEM 19
          )
         ((or (lambda? expr)
@@ -69,18 +69,21 @@
                (params (cadr expr))
                (body   (cddr expr)))
            ; BEGIN PROBLEM 19
-           'replace-this-line
+           (cons form (cons params (let-to-lambda body)))
            ; END PROBLEM 19
            ))
         ((let? expr)
          (let ((values (cadr expr))
                (body   (cddr expr)))
            ; BEGIN PROBLEM 19
-           'replace-this-line
+           (cons (cons (quote lambda)
+                       (cons (car (zip (let-to-lambda values)))
+                             (let-to-lambda body)))
+                 (cadr (zip (let-to-lambda values))))
            ; END PROBLEM 19
            ))
         (else
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         (map let-to-lambda expr)
          ; END PROBLEM 19
          )))
