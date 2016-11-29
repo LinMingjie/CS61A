@@ -7,7 +7,7 @@ def question1():
     >>> hashlib.md5(question1().encode()).hexdigest()
     'b8228deaf5fa72f791a34447dae865f8'
     """ 
-    return 'YOUR-TOKEN-HERE'
+    return 'd2497935c628b663500b6f596a76a727'
 
 def question2():
     """ 
@@ -16,7 +16,7 @@ def question2():
     >>> hashlib.md5(question2().encode()).hexdigest()
     'd935331a584574a9742a377361c3c4d4'
     """ 
-    return 'YOUR-TOKEN-HERE'
+    return '3724de203475bef48deb7dbcc61a5869'
 
 def question3():
     """ 
@@ -25,4 +25,4 @@ def question3():
     >>> hashlib.md5(question3().encode()).hexdigest()
     '8f708cec8ff9e9d87d6a7f8a6a33eda7'
     """ 
-    return 'YOUR-TOKEN-HERE'
+    return 'b2bc9abb797485ce4d3b7b4505cc4dfe'
